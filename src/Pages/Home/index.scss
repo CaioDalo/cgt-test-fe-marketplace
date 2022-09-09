@@ -1,0 +1,98 @@
+.top-home, .main-home {
+    width: 100vw;
+    .banner {
+        width: 100%;
+        max-height: 600px;
+        margin: 72px auto 0;
+    }
+}
+
+.main-home {
+    .category-overview, .product-overview {
+        max-width: 1020px;
+        margin: 0 auto;
+        padding: 10px 10px;
+    }
+
+    .list {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        margin: 20px auto;
+        flex-wrap: wrap;
+        padding: 20px;
+
+        .card {
+            width: 300px;
+            height: 300px;
+            margin: 10px;
+            border: 1px solid var(--grey);
+            padding: 20px;
+            position: relative;
+
+            background-position: center;
+            background-size: cover;
+
+            p {
+                color: var(--white);
+                font-size: 18px;
+                position: absolute;
+                bottom: 20px;
+            }
+        }
+
+        .cat1 {
+            background-image: url('../../assets/imgs/products/a.jpg');
+        }
+        .cat2 {
+            background-image: url('../../assets/imgs/products/b.jpg');
+        }
+        .cat3 {
+            background-image: url('../../assets/imgs//products/c.jpg');
+        }
+    }
+
+    .product-overview-container {
+        background-color: var(--offWhite);
+        width: 100vw;
+        padding: 10px 0;
+
+        .product-overview {
+            .list-overview {
+                max-width: 600px;
+                display: flex;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+    
+                li {
+                    margin-right: 10px;
+                    
+                    label {
+                        cursor: pointer;
+                    }
+                }
+    
+                input[type=radio] {
+                    display: none;
+                }
+    
+                input[type=radio]:checked + label {
+                    text-decoration: underline;
+                }
+            }
+
+        }
+        .see-more {
+            width: fit-content;
+            padding: 10px;
+            display: block;
+            margin: 0 auto 20px;
+            background-color: var(--blue);
+            color: var(--yellow);
+        }
+    }
+
+    h2 {
+        font-size: 32px;
+    }
+}

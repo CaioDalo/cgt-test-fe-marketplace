@@ -1,7 +1,10 @@
 .header {
     padding: 15px 30px;
     background-color: var(--blue);
-    position: relative;
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    z-index: 999;
 
     .header-container-desktop {
         display: flex;
@@ -142,7 +145,7 @@
             }
 
             ul {
-                margin-top: 30px;
+                margin-top: 90px;
 
                 .search {
                     margin: 0 auto;
@@ -161,7 +164,7 @@
         }
     }
 
-    .form-signIn-singUp {
+    .form-signIn-singUp, .form-signIn-singUp-mobile {
         width: 300px;
         position: absolute;
         top: 57px;
@@ -173,7 +176,6 @@
 
         @media screen and (max-width: 720px) {
             position: relative;
-            display: block;
             top: initial;
             right: initial;
             width: 100%;
@@ -202,7 +204,7 @@
                 @media screen and (max-width: 720px) {
                     top: -18px;
                     right: 50%;
-                    transform: translatex(50%);
+                    transform: translateX(50%);
                 }
             }
 
@@ -257,7 +259,7 @@
                 text-align: center;
             }
 
-            .signUp-container {
+            .signUp-container, .signUp-container-mobile {
                 display: none;
             }
         }
@@ -283,5 +285,4 @@ button[type=submit] {
     margin: 10px auto 0;
     padding: 10px 30px;
     font-size: 16px;
-    color: var(--white);
 }

@@ -1,27 +1,39 @@
 
+import { useState } from 'react'
+
 import {CgSearch} from 'react-icons/cg'
 import {GiHamburgerMenu} from 'react-icons/gi'
 import {MdShoppingCart} from 'react-icons/md'
 import {FaUser} from 'react-icons/fa'
 import {MdOutlineArrowDropUp} from 'react-icons/md'
 
-import { useState } from 'react'
-
 import './index.scss'
 
 export default function Header() {
 
     const [value, setValue] = useState('signIn-container');
+    const [valueMobile, setValueMobile] = useState('signIn-container-mobile');
 
     const handleChange = (event) => {
-        setValue(event.target.value);
+        if(event.target.value.includes('mobile')) {
+            setValueMobile(event.target.value);
 
-        if(event.target.value == 'signIn-container') {
-            document.querySelector('.signIn-container').style.display = 'block'
-            document.querySelector('.signUp-container').style.display = 'none'
+            const tabs = document.querySelectorAll('.tab-mobile')
+            tabs.forEach(tab => {
+                tab.style.display = 'none'
+            })
+
+            document.querySelector(`.${event.target.value}`).style.display = 'block'
+
         } else {
-            document.querySelector('.signIn-container').style.display = 'none'
-            document.querySelector('.signUp-container').style.display = 'block'
+            setValue(event.target.value);
+            
+            const tabs = document.querySelectorAll('.tab')
+            tabs.forEach(tab => {
+                tab.style.display = 'none'
+            })
+
+            document.querySelector(`.${event.target.value}`).style.display = 'block'
         }
     };
 
@@ -31,8 +43,10 @@ export default function Header() {
     }
 
     const handleSingIn = () => {
-        const formSignIn = document.querySelector('.form-signIn-singUp')
-        formSignIn.classList.toggle('d-block')
+        const formsSignIn = document.querySelectorAll('.form-signIn-singUp')
+        formsSignIn.forEach(form => {
+            form.classList.toggle('d-block')
+        })
     }
 
     return(
@@ -67,14 +81,14 @@ export default function Header() {
                     <div className='access-container'>
                         <MdOutlineArrowDropUp/>
                         <div>
-                            <input type='radio' id='signIn-container' value='signIn-container' name='teste' checked={value === 'signIn-container'} onChange={handleChange}/>
+                            <input type='radio' id='signIn-container' value='signIn-container' name='signIn-signUp' checked={value === 'signIn-container'} onChange={handleChange}/>
                             <label htmlFor='signIn-container'>Login</label>
 
-                            <input type='radio' id='signUp-container' value='signUp-container' name='teste' checked={value === 'signUp-container'} onChange={handleChange}/>
+                            <input type='radio' id='signUp-container' value='signUp-container' name='signIn-signUp' checked={value === 'signUp-container'} onChange={handleChange}/>
                             <label htmlFor='signUp-container'>Sign Up</label>
                         </div>
 
-                        <form className='signIn-container'>
+                        <form className='signIn-container tab'>
                             <div className='credencials'>
                                 <input type='email' className='login' placeholder='Login'/>
                                 <input type='password' className='password' placeholder='Password'/>
@@ -90,7 +104,7 @@ export default function Header() {
                             <button type='submit'>Sing In</button>
                         </form>
 
-                        <form className='signUp-container'>
+                        <form className='signUp-container tab'>
                             <div className='credencials'>
                                 <input type='email' className='login' placeholder='Username'/>
                                 <input type='email' className='login' placeholder='Login'/>
@@ -145,22 +159,22 @@ export default function Header() {
                         <div className='access-container'>
                             <MdOutlineArrowDropUp/>
                             <div>
-                                <input type='radio' id='signIn-container' value='signIn-container' name='teste' checked={value === 'signIn-container'} onChange={handleChange}/>
-                                <label htmlFor='signIn-container'>Login</label>
+                                <input type='radio' id='signIn-container-mobile' value='signIn-container-mobile' name='signIn-signUp-mobile' checked={valueMobile === 'signIn-container-mobile'} onChange={handleChange}/>
+                                <label htmlFor='signIn-container-mobile'>Login</label>
 
-                                <input type='radio' id='signUp-container' value='signUp-container' name='teste' checked={value === 'signUp-container'} onChange={handleChange}/>
-                                <label htmlFor='signUp-container'>Sign Up</label>
+                                <input type='radio' id='signUp-container-mobile' value='signUp-container-mobile' name='signIn-signUp-mobile' checked={valueMobile === 'signUp-container-mobile'} onChange={handleChange}/>
+                                <label htmlFor='signUp-container-mobile'>Sign Up</label>
                             </div>
 
-                            <form className='signIn-container'>
+                            <form className='signIn-container-mobile tab-mobile'>
                                 <div className='credencials'>
                                     <input type='email' className='login' placeholder='Login'/>
                                     <input type='password' className='password' placeholder='Password'/>
                                 </div>
                                 <div className='remember-forgot-container'>
                                     <div className='remember-me-container'>
-                                        <input type='checkbox' className='remember-me' id='remember-me' />
-                                        <label htmlFor='remember-me'>Remember me</label>
+                                        <input type='checkbox' className='remember-me' id='remember-me-mobile' />
+                                        <label htmlFor='remember-me-mobile'>Remember me</label>
                                     </div>
                                     <a href='/forgot-password'>Forgot password?</a>
                                 </div>
@@ -168,7 +182,7 @@ export default function Header() {
                                 <button type='submit'>Sing In</button>
                             </form>
 
-                            <form className='signUp-container'>
+                            <form className='signUp-container-mobile tab-mobile'>
                                 <div className='credencials'>
                                     <input type='email' className='login' placeholder='Username'/>
                                     <input type='email' className='login' placeholder='Login'/>
@@ -176,8 +190,8 @@ export default function Header() {
                                 </div>
                                 <div className='remember-forgot-container'>
                                     <div className='remember-me-container'>
-                                        <input type='checkbox' className='remember-me' id='terms-of-use' />
-                                        <label htmlFor='terms-of-use'>have read and accept the <a href='/terms-of-use'>Terms of Use</a></label>
+                                        <input type='checkbox' className='remember-me' id='terms-of-use-mobile' />
+                                        <label htmlFor='terms-of-use-mobile'>have read and accept the <a href='/terms-of-use'>Terms of Use</a></label>
                                     </div>
                                 </div>
 
