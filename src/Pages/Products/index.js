@@ -1,60 +1,84 @@
-import React, { useState, useContext } from 'react';
 
 import pictureA from '../../assets/imgs/products/a.jpg';
 import pictureB from '../../assets/imgs/products/b.jpg'
 import pictureC from '../../assets/imgs/products/c.jpg'
 
-import { AuthContext } from '../../Utils/handleCart';
+import { useCart } from '../../Hooks/handleCart';
 
 import './index.scss'
 
 export default function Products() {
 
-    const {products} = React.useContext(AuthContext)
-    console.log(products)
+    const {addProduct} = useCart()
 
-    /* const {name, setName} = useState('')
-    const {value, setValue} = useState(0)
-
-    async function addCartItems(e) {
+    const addToCart = (e) => {
         e.preventDefault()
 
-        CartItems({
-            name,
-            value
-        })
-    } */
-    
+        const product = {
+            id: new Date(),
+            name: e.target.name,
+            value: Number(e.target.value)
+        }
 
-    const setHeader = () => {
-        const footer = document.querySelector('header')
-        footer.style.position = 'relative'
+        addProduct(
+            product
+        )
     }
 
     return(
-        <>
+        <>  {
+                window.location.pathname === '/products' && (
+                    <div className='product-cart-container'>
+                        <ul className='list'>
+                            <a href="/products/a">
+                                <li className='card cat1'>
+                                    <h3>You are probably <br /> interested in A</h3>
+                                    <p>See this product</p>
+                                </li>
+                            </a>
+
+                            <a href="/products/b">
+                                <li className='card cat2'>
+                                    <h3>Check out the <br /> newest product  B</h3>
+                                    <p>See this product</p>
+                                </li>
+                            </a>
+
+                            <a href="/products/c">
+                                <li className='card cat3'>
+                                    <h3>What about the <br /> product C ?</h3>
+                                    <p>See this product</p>
+                                </li>
+                            </a>
+                        </ul>
+                    </div>
+                )
+            }
             {
                 window.location.pathname === '/products/c' && (
-                    <div className='product-container' onLoad={setHeader}>
-                        <form className='product' /* onSubmit={addCartItems} */>
+                    <div className='product-cart-container' id='product-container'>
+                        <div className='product'>
                             <img src={pictureC} alt='Product C'/>
                             
                             <div className='product-infos'>
-                                <h1 className='product-name' value='Product C' /* onSubmit={e => setName('Product C')}> */>Product C</h1>
+                                <h1 className='product-name' value='Product C'>Product C</h1>
                                 <p className='description'>
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dolor quam, facilisis ac tortor id, suscipit mattis nisi. Vestibulum a nisl vel lacus tincidunt aliquam. Morbi fermentum eros in augue finibus, ut faucibus mauris pellentesque.
                                 </p>
-                                <p className='price'>Price: <span className='value' value='20.00' /* onSubmit={e => setValue(Number(e.target.value))} */>$20.00</span></p>
+                                <p className='price'>Price: <span className='value' value='20.00'>$20.00</span></p>
                                 
-                                <button type='submit'>Add to cart</button>
+                                <button name='Product C' value="20.00"
+                                        onClick={addToCart} >
+                                        Add to cart
+                                </button>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 )
             }
             {
                 window.location.pathname === '/products/b' && (
-                    <div className='product-container' onLoad={setHeader}>
+                    <div className='product-cart-container' id='product-container'>
                         <div className='product'>
                             <img src={pictureB} alt='Product B'/>
 
@@ -65,7 +89,10 @@ export default function Products() {
                                 </p>
                                 <p className='price'>Price: <span className='value' value='30.00'>$30.00</span></p>
                                 
-                                <button onClick={() => console.warn('Not implemented!')}>Add to cart</button>
+                                <button name='Product B' value="30.00"
+                                        onClick={addToCart}>
+                                        Add to cart
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -73,7 +100,7 @@ export default function Products() {
             }
             {
                 window.location.pathname === '/products/a' && (
-                    <div className='product-container' onLoad={setHeader}>
+                    <div className='product-cart-container' id='product-container'>
                         <div className='product'>
                             <img src={pictureA} alt='Product A'/>
 
@@ -84,7 +111,10 @@ export default function Products() {
                                 </p>
                                 <p className='price'>Price: <span className='value' value='10.00'>$10.00</span></p>
                                 
-                                <button onClick={() => console.warn('Not implemented!')}>Add to cart</button>
+                                <button name='Product A' value="10.00"
+                                        onClick={addToCart}>
+                                        Add to cart
+                                </button>
                             </div>
                         </div>
                     </div>

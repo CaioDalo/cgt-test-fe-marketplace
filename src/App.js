@@ -5,16 +5,21 @@ import Products from './Pages/Products/index'
 import Cart from './Pages/Cart/index'
 
 import './assets/styles/global.scss'
+import { CartProvider } from './Hooks/handleCart'
 
 function App() {
   return (
-    <main>
-      < Header/>
-      < Home/>
-      < Products/>
-      < Cart/>
+    <>
+      <CartProvider>
+        < Header/>
+        <main>
+          < Home/>
+          < Products/>
+          < Cart/>
+        </main>
+      </CartProvider>
       < Footer/>
-    </main>
+      </>
   );
 }
 

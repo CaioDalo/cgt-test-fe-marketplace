@@ -1,7 +1,7 @@
 .header {
     padding: 15px 30px;
     background-color: var(--blue);
-    position: fixed;
+    position: sticky;
     top: 0;
     width: 100vw;
     z-index: 999;
@@ -281,7 +281,6 @@ button {
 }
 
 button[type=submit] {
-    background-color: var(--blue);
     margin: 10px auto 0;
     padding: 10px 30px;
     font-size: 16px;

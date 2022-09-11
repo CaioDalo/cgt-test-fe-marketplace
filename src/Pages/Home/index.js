@@ -96,7 +96,7 @@ export default function Home() {
                                 </a>
                             </ul>
 
-                            <a className='see-more'>See more!</a>
+                            <a className='see-more button-blue'>See more!</a>
                         </div>
                     </div>
                 </section>

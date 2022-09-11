@@ -56,7 +56,7 @@ export default function Footer() {
                                     <form>
                                         <input type='email' placeholder='Email' />
                                         <br/>
-                                        <button type='submit'>Submit</button>
+                                        <button type='submit' className='button-yellow'>Submit</button>
                                     </form>
                                 </li>
                             </ul>

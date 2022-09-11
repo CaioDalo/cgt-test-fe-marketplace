@@ -1,6 +1,8 @@
 
 import { useState } from 'react'
 
+import { useCart } from '../../../Hooks/handleCart';
+
 import {CgSearch} from 'react-icons/cg'
 import {GiHamburgerMenu} from 'react-icons/gi'
 import {MdShoppingCart} from 'react-icons/md'
@@ -11,12 +13,14 @@ import './index.scss'
 
 export default function Header() {
 
+    const {products} = useCart()
+
     const [value, setValue] = useState('signIn-container');
     const [valueMobile, setValueMobile] = useState('signIn-container-mobile');
 
     const handleChange = (event) => {
         if(event.target.value.includes('mobile')) {
-            setValueMobile(event.target.value);
+            setValueMobile(event.target.value)
 
             const tabs = document.querySelectorAll('.tab-mobile')
             tabs.forEach(tab => {
@@ -26,7 +30,7 @@ export default function Header() {
             document.querySelector(`.${event.target.value}`).style.display = 'block'
 
         } else {
-            setValue(event.target.value);
+            setValue(event.target.value)
             
             const tabs = document.querySelectorAll('.tab')
             tabs.forEach(tab => {
@@ -50,7 +54,7 @@ export default function Header() {
     }
 
     return(
-        <header className='header'>
+        <header id='header' className='header'>
             <div className='header-container-desktop'>
                 <a href="/"><h1 className="logo">90's shop</h1></a>
                 <nav>
@@ -61,13 +65,17 @@ export default function Header() {
                         </li>
 
                         <li>
+                            <a href='/products'>Products</a>
+                        </li>
+
+                        <li>
                             <a href="/about-us">About us</a>
                         </li>
 
                         <li>
                             <a className='cart' href="/cart">
                                 <MdShoppingCart/>{/* {cartItems().length} */}
-                                <p>3{/* {cartItems().length} */}</p>
+                                <p>{products.length}</p>
                             </a>
                         </li>
 
@@ -101,7 +109,7 @@ export default function Header() {
                                 <a href='/forgot-password'>Forgot password?</a>
                             </div>
 
-                            <button type='submit'>Sing In</button>
+                            <button type='submit' className='button-blue'>Sing In</button>
                         </form>
 
                         <form className='signUp-container tab'>
@@ -117,7 +125,7 @@ export default function Header() {
                                 </div>
                             </div>
 
-                            <button type='submit'>Sign Up</button>
+                            <button type='submit' className='button-blue'>Sign Up</button>
                         </form>
                     </div>
                 </div>
@@ -129,7 +137,7 @@ export default function Header() {
                     <div className='hamburger-cart-container'>
                         <a className='cart' href="/cart">
                             <MdShoppingCart/>
-                            <p>3{/* {cartItems().length} */}</p>
+                            <p>{products.length}</p>
                         </a>
                         <div className='spacer'></div>
                         <button className='hamburger' onClick={handleAside}><GiHamburgerMenu/></button>
@@ -144,6 +152,10 @@ export default function Header() {
                         <li className='search'>
                             <input type='text' placeholder='Search..'/>
                             <CgSearch/>
+                        </li>
+
+                        <li>
+                            <a href='/products'>Products</a>
                         </li>
 
                         <li>
@@ -179,7 +191,7 @@ export default function Header() {
                                     <a href='/forgot-password'>Forgot password?</a>
                                 </div>
 
-                                <button type='submit'>Sing In</button>
+                                <button type='submit' className='button-blue'>Sing In</button>
                             </form>
 
                             <form className='signUp-container-mobile tab-mobile'>
@@ -195,7 +207,7 @@ export default function Header() {
                                     </div>
                                 </div>
 
-                                <button type='submit'>Sign Up</button>
+                                <button type='submit' className='button-blue'>Sign Up</button>
                             </form>
                         </div>
                     </div>
