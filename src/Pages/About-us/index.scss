@@ -1,0 +1,51 @@
+.d-flex {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 60px auto;
+
+    img {
+        width: 50%;
+    }
+
+    .texts {
+        width: 30%;
+    }
+
+    @media screen and (max-width: 830px) {
+        padding: 0 10px;
+        img {
+            width: 100%;
+        }
+
+        .texts {
+            width: 100%;
+            margin-top: 20px;
+        }
+    }
+}
+
+.grey-background {
+    background-color: var(--blue);
+    padding: 50px 0;
+    text-align: center;
+
+    div {
+        width: 70%;
+        margin: 0 auto;
+        p {
+            color: var(--yellow);
+            margin-top: 30px;
+        }
+    }
+}
+
+.img-right {
+    flex-direction: row-reverse;
+}
+
+h1 {
+    font-size: 32px;
+}

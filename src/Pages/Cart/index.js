@@ -4,13 +4,13 @@ import './index.scss'
 
 export default function Cart() {
 
-    const {products, removeProduct } = useCart()
+    const {products, removeProduct, updateProduct} = useCart()
     
     const isEmpty = products.length
 
-    let subTotal = 0
+    let subTotalCart = 0
     products.map(product => {
-        return subTotal += product.value
+        return subTotalCart += (product.value * product.quantity)
     })
 
     const removeProductCart = (e) => {
@@ -19,9 +19,15 @@ export default function Cart() {
         )
     }
 
-    const emptyStyle = {
-        'margin': '0 auto',
-        'textAlign': 'center'
+    const updateQuantity = (e, newQuantity) => {
+        const product = {
+            id: new Date(),
+            name: e.target.name,
+            value: Number(e.target.value),
+            quantity: Number(newQuantity),
+        }
+
+        updateProduct(product)
     }
     
     return(
@@ -37,12 +43,13 @@ export default function Cart() {
                                         <th>Remove</th>
                                         <th>Product</th>
                                         <th>Price</th>
+                                        <th>Quantity</th>
                                         <th>Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
-                                        products.map(({id, name, value}) => (
+                                        products.map(({id, name, value, quantity}) => (
                                             <tr key={id}>
                                                 <td><button id={id} className='remove' onClick={removeProductCart}>X</button></td>
                                                 <td>{name}</td>
@@ -54,10 +61,17 @@ export default function Cart() {
                                                     }).format(value)}
                                                 </td>
                                                 <td>
+                                                    <div className='quantity-container'>
+                                                        <button className='button-blue' name={name} value={value} onClick={e => updateQuantity(e, quantity - 1)}>-</button>
+                                                        <input type='text' className='quantity' value={quantity} disabled/>
+                                                        <button className='button-blue' name={name} value={value} onClick={e => updateQuantity(e, quantity + 1)}>+</button>
+                                                    </div>
+                                                </td>
+                                                <td>
                                                     {new Intl.NumberFormat('en-US', {
                                                         style: 'currency',
                                                         currency: 'USD'
-                                                    }).format(value)}
+                                                    }).format(value * quantity)}
                                                 </td>
                                             </tr>
                                         ))
@@ -70,7 +84,7 @@ export default function Cart() {
                                     <p>Subtotal: {new Intl.NumberFormat('en-US', {
                                                         style: 'currency',
                                                         currency: 'USD'
-                                                    }).format(subTotal)}</p>
+                                                    }).format(subTotalCart)}</p>
                                 </div>
                                 <hr />
                                 <div className='coupon'>
@@ -83,13 +97,13 @@ export default function Cart() {
                                     <p>Total: {new Intl.NumberFormat('en-US', {
                                                         style: 'currency',
                                                         currency: 'USD'
-                                                    }).format(subTotal)}</p>
+                                                    }).format(subTotalCart)}</p>
                                     <button className='button-blue'>Proceed to checkout</button>
                                 </div>
                             </div>
                         </div>
                         : 
-                        <h2 style={emptyStyle}>Your cart is empty :(</h2>
+                        <h2 className='cart-empty'>Your cart is empty :(</h2>
                     }
                 </div>
             </>

@@ -20,6 +20,29 @@ export const CartProvider = ({children}) => {
         setProducts([...products, product])
     }
 
+    const updateProduct = (product) => {
+        let updateFromProducts
+
+        const newQuantity = product.quantity
+
+        if(product.quantity !== 0) {
+                updateFromProducts = products.map((productCart) => productCart.name === product.name ? ({
+                ...productCart,
+                quantity: newQuantity
+            }) : productCart);
+            setProducts(updateFromProducts);
+        } else {
+            if(products.length > 1) {
+                updateFromProducts = products.filter(productCart => productCart.name !== product.name)
+            } else {
+                updateFromProducts = []
+                sessionStorage.setItem('cart', JSON.stringify(updateFromProducts))
+            }
+        }
+
+        setProducts(updateFromProducts)
+    }
+
     const removeProduct = (id) => {
         let removedIdfromProducts
         
@@ -34,7 +57,7 @@ export const CartProvider = ({children}) => {
     }
 
     return (
-        <cartContext.Provider value={{products, addProduct, removeProduct}}>
+        <cartContext.Provider value={{products, addProduct, removeProduct, updateProduct}}>
             {children}
         </cartContext.Provider>
     )

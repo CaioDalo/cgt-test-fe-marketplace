@@ -129,7 +129,7 @@
             width: 0;
             height: 100vh;
             text-align: center;
-            background-color: var(--offWhite);
+            background-color: var(--white);
             transition: width 0.3s;
 
             .header {
@@ -145,7 +145,7 @@
             }
 
             ul {
-                margin-top: 90px;
+                margin-top: 30px;
 
                 .search {
                     margin: 0 auto;
@@ -274,6 +274,11 @@
     display: block !important;
 }
 
+.error {
+    color: red;
+    font-size: 12px;
+    text-align: left;
+}
 
 button {
     color: var(--yellow);
