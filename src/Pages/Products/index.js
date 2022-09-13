@@ -24,6 +24,10 @@ export default function Products() {
                 setIsInCart(true)
             }
         })
+
+        if(products.length == 0) {
+            setIsInCart(false)
+        }
     }, [products])
 
     const addToCart = (e) => {

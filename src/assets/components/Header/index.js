@@ -17,7 +17,7 @@ import './index.scss'
 export default function Header() {
 
     const {products} = useCart()
-    const {signUp, signIn, logout} = useUser()
+    const {signUp, signIn, logout, isLogged, usernameStoraged} = useUser()
 
     const [value, setValue] = useState('signIn-container');
     const [valueMobile, setValueMobile] = useState('signIn-container-mobile');
@@ -32,9 +32,16 @@ export default function Header() {
     const [messagePassword, setMessagePassword] = useState('')
     const [isCheckedMessage, setMessageIsCheckedMessage] = useState('')
 
+    const [signUpMessage, setsignUpMessage] = useState('')
+    const [signUpMessageStyle, setSignUpMessageStyle] = useState({})
+
+    const [signInMessage, setsignInMessage] = useState('')
+    const [isRemember, setIsRemember] = useState(false)
+
     let itemsInCart = 0
     products.map(product => {
         itemsInCart += product.quantity
+        return itemsInCart
     })
 
     const handleChange = (event) => {
@@ -62,6 +69,10 @@ export default function Header() {
         setIsChecked(!isChecked);
     }
 
+    const handleRemember = () => {
+        setIsRemember(!isRemember);
+    }
+
     const validateSignUp = async (e) => {
         e.preventDefault()
         const isUsername = await validateUsername(username)
@@ -76,10 +87,10 @@ export default function Header() {
         const isPasswordValid = isPassword.status
         setMessagePassword(isPassword.message)
 
-        isChecked == false ? setMessageIsCheckedMessage('You must accept the terms') 
+        isChecked === false ? setMessageIsCheckedMessage('You must accept the terms') 
         : setMessageIsCheckedMessage('')
 
-        if(isUsernameValid == true && isEmailValid == true && isPasswordValid == true && isChecked == true) {
+        if(isUsernameValid === true && isEmailValid === true && isPasswordValid === true && isChecked === true) {
             createUser()
         }
     }
@@ -92,15 +103,32 @@ export default function Header() {
         }
         const response = await signUp(user)
 
-        if(response) {
+        if(response === true) {
             setUsername('')
-            setMessageEmail('')
+            setEmail('')
             setPassword('')
             setIsChecked(false)
+            setsignUpMessage('Account Created!')
+            setSignUpMessageStyle({
+                color: '#04d108',
+                fontSize: '16px',
+                textAlign: 'center',
+            })
+            setTimeout(() => {
+                setsignUpMessage('')
+            }, 3000);
+        } else {
+            setsignUpMessage('Sorry, something went wrong. Please, try again.')
+            setSignUpMessageStyle({
+                color: 'red',
+                fontSize: '16px',
+                textAlign: 'center',
+            })
         }
     }
 
     const validateSignIn = async (e) => {
+        e.preventDefault()
         const isEmail = await validateEmail(email)
         const isEmailValid = isEmail.status
         setMessageEmail(isEmail.message)
@@ -109,22 +137,30 @@ export default function Header() {
         const isPasswordValid = isPassword.status
         setMessagePassword(isPassword.message)
 
-        if(isEmailValid == true && isPasswordValid == true) {
+        if(isEmailValid === true && isPasswordValid === true) {
             login()
         }
     }
 
-    const login = () => {
+    const login = async () => {
         const user = {
             email: email,
             password: password,
+            remember: isRemember
         }
-        signIn(user)
+        const response = await signIn(user)
 
-        setUsername('')
-        setMessageEmail('')
-        setPassword('')
-        setIsChecked(false)
+        if(response === true) {
+            setEmail('')
+            setPassword('')
+            setsignInMessage('')
+        } else {
+            setsignInMessage('Sorry, user do not found.')
+        }
+    }
+
+    const signOut = (e) => {
+        logout(e.target.value)
     }
 
     const handleAside = () => {
@@ -149,22 +185,18 @@ export default function Header() {
                             <input type='text' placeholder='Search..'/>
                             <CgSearch/>
                         </li>
-
                         <li>
                             <a href='/products'>Products</a>
                         </li>
-
                         <li>
                             <a href="/about-us">About us</a>
                         </li>
-
                         <li>
                             <a className='cart' href="/cart">
                                 <MdShoppingCart/>
                                 <p>{itemsInCart}</p>
                             </a>
                         </li>
-
                         <li >
                             <button className='user-icon' data-testid='user-icon' onClick={handleSingInSignUp}><FaUser/></button>
                         </li>
@@ -172,56 +204,67 @@ export default function Header() {
                 </nav>
 
                 <div className='form-signIn-singUp' data-testid='form-signIn-singUp'>
-                    <div className='access-container'>
-                        <MdOutlineArrowDropUp/>
-                        <div>
-                            <input type='radio' id='signIn-container' value='signIn-container' name='signIn-signUp' checked={value === 'signIn-container'} onChange={handleChange}/>
-                            <label htmlFor='signIn-container'>Login</label>
+                    {isLogged === true ?
+                            <div className='access-container logged-container tab'>
+                                <MdOutlineArrowDropUp/>
+                                <h1>Hello, {usernameStoraged}</h1>
+                                <button className='button-blue btn-signout' value={usernameStoraged} onClick={signOut}>Sign Out</button>
+                            </div>
+                        :
+                        <div className='access-container'>
+                            <MdOutlineArrowDropUp/>
+                            <div>
+                                <input type='radio' id='signIn-container' value='signIn-container' name='signIn-signUp' checked={value === 'signIn-container'} onChange={handleChange}/>
+                                <label htmlFor='signIn-container'>Login</label>
 
-                            <input type='radio' id='signUp-container' value='signUp-container' name='signIn-signUp' checked={value === 'signUp-container'} onChange={handleChange}/>
-                            <label htmlFor='signUp-container'>Sign Up</label>
+                                <input type='radio' id='signUp-container' value='signUp-container' name='signIn-signUp' checked={value === 'signUp-container'} onChange={handleChange}/>
+                                <label htmlFor='signUp-container'>Sign Up</label>
+                            </div>
+
+                            <form className='signIn-container tab' onSubmit={validateSignIn}>
+                                <div className='credencials'>
+                                    <input type='text' className='login' value={email} placeholder='Email' onChange={e => setEmail(e.target.value)}/>
+                                    <p className='error'>{messageEmail}</p>
+                                    <input type='password' className='password' value={password} placeholder='Password' onChange={e => setPassword(e.target.value)}/>
+                                    <p className='error'>{messagePassword}</p>
+                                </div>
+                                <div className='remember-forgot-container'>
+                                    <div className='remember-me-container'>
+                                        <input type='checkbox' className='remember-me' id='remember-me' checked={isRemember} onChange={handleRemember}/>
+                                        <label htmlFor='remember-me'>Remember me</label>
+                                    </div>
+                                    <a href='/forgot-password'>Forgot password?</a>
+                                </div>
+                                <p className='error'>{signInMessage}</p>
+                                <button type='submit' className='button-blue'>Sing In</button>
+                            </form>
+
+                            <form className='signUp-container tab' onSubmit={validateSignUp}>
+                                <div className='credencials'>
+                                    <input type='text' className='username' value={username} placeholder='Username' onChange={e => setUsername(e.target.value)}/>
+                                    <p className='error'>{messageUsername}</p>
+                                    <input type='text' className='login' value={email} placeholder='Email' onChange={e => setEmail(e.target.value)}/>
+                                    <p className='error'>{messageEmail}</p>
+                                    <input type='password' className='password' value={password} placeholder='Password' onChange={e => setPassword(e.target.value)}/>
+                                    <p className='error'>{messagePassword}</p>
+                                </div>
+
+                                <div className='remember-forgot-container'>
+                                    <div className='remember-me-container'>
+                                        <input type='checkbox' className='remember-me' id='terms-of-use' checked={isChecked} onChange={handleCheckbox}/>
+                                        <label htmlFor='terms-of-use'>have read and accept the <a href='/terms-of-use'>Terms of Use</a></label>
+                                    </div>
+                                </div>
+                                <p className='error'>{isCheckedMessage}</p>
+                                <p className='success' style={signUpMessageStyle}>{signUpMessage}</p>
+                                <button type='submit' className='button-blue'>Sign Up</button>
+                            </form>
                         </div>
-
-                        <form className='signIn-container tab' onSubmit={validateSignIn}>
-                            <div className='credencials'>
-                                <input type='text' className='login' placeholder='Email' onChange={e => setEmail(e.target.value)}/>
-                                <p className='error'>{messageEmail}</p>
-                                <input type='password' className='password' placeholder='Password' onChange={e => setPassword(e.target.value)}/>
-                                <p className='error'>{messagePassword}</p>
-                            </div>
-                            <div className='remember-forgot-container'>
-                                <div className='remember-me-container'>
-                                    <input type='checkbox' className='remember-me' id='remember-me' />
-                                    <label htmlFor='remember-me'>Remember me</label>
-                                </div>
-                                <a href='/forgot-password'>Forgot password?</a>
-                            </div>
-
-                            <button type='submit' className='button-blue'>Sing In</button>
-                        </form>
-
-                        <form className='signUp-container tab' onSubmit={validateSignUp}>
-                            <div className='credencials'>
-                                <input type='text' className='username' placeholder='Username' onChange={e => setUsername(e.target.value)}/>
-                                <p className='error'>{messageUsername}</p>
-                                <input type='text' className='login' placeholder='Email' onChange={e => setEmail(e.target.value)}/>
-                                <p className='error'>{messageEmail}</p>
-                                <input type='password' className='password' placeholder='Password' onChange={e => setPassword(e.target.value)}/>
-                                <p className='error'>{messagePassword}</p>
-                            </div>
-
-                            <div className='remember-forgot-container'>
-                                <div className='remember-me-container'>
-                                    <input type='checkbox' className='remember-me' id='terms-of-use' checked={isChecked} onChange={handleCheckbox}/>
-                                    <label htmlFor='terms-of-use'>have read and accept the <a href='/terms-of-use'>Terms of Use</a></label>
-                                </div>
-                            </div>
-                            <p className='error'>{isCheckedMessage}</p>
-                            <button type='submit' className='button-blue'>Sign Up</button>
-                        </form>
-                    </div>
+                    }
                 </div>
             </div>
+
+
 
             <div className='header-container-hamburger'>
                 <div className='header-hamburger-container'>
@@ -245,68 +288,74 @@ export default function Header() {
                             <input type='text' placeholder='Search..'/>
                             <CgSearch/>
                         </li>
-
                         <li>
                             <a href='/products'>Products</a>
                         </li>
-
                         <li>
                             <a href="/about-us">About us</a>
                         </li>
-
                         <li >
                             <button className='user-icon' onClick={handleSingInSignUp}><FaUser/></button>
                         </li>
                     </ul>
 
                     <div className='form-signIn-singUp'>
-                        <div className='access-container'>
-                            <MdOutlineArrowDropUp/>
-                            <div>
-                                <input type='radio' id='signIn-container-mobile' value='signIn-container-mobile' name='signIn-signUp-mobile' checked={valueMobile === 'signIn-container-mobile'} onChange={handleChange}/>
-                                <label htmlFor='signIn-container-mobile'>Login</label>
+                        {isLogged === true ?
+                                <div className='access-container logged-container tab'>
+                                    <MdOutlineArrowDropUp/>
+                                    <h1>Hello, {usernameStoraged}</h1>
+                                    <button className='button-blue btn-signout' value={usernameStoraged} onClick={signOut}>Sign Out</button>
+                                </div>
+                            :
+                            <div className='access-container'>
+                                <MdOutlineArrowDropUp/>
+                                <div>
+                                    <input type='radio' id='signIn-container-mobile' value='signIn-container-mobile' name='signIn-signUp-mobile' checked={valueMobile === 'signIn-container-mobile'} onChange={handleChange}/>
+                                    <label htmlFor='signIn-container-mobile'>Login</label>
 
-                                <input type='radio' id='signUp-container-mobile' value='signUp-container-mobile' name='signIn-signUp-mobile' checked={valueMobile === 'signUp-container-mobile'} onChange={handleChange}/>
-                                <label htmlFor='signUp-container-mobile'>Sign Up</label>
+                                    <input type='radio' id='signUp-container-mobile' value='signUp-container-mobile' name='signIn-signUp-mobile' checked={valueMobile === 'signUp-container-mobile'} onChange={handleChange}/>
+                                    <label htmlFor='signUp-container-mobile'>Sign Up</label>
+                                </div>
+
+                                <form className='signIn-container-mobile tab-mobile' onSubmit={validateSignIn}>
+                                    <div className='credencials'>
+                                        <input type='text' className='email' value={email} placeholder='Email' onChange={e => setEmail(e.target.value)}/>
+                                        <p className='error'>{messageEmail}</p>
+                                        <input type='password' className='password' value={password} placeholder='Password' onChange={e => setPassword(e.target.value)}/>
+                                        <p className='error'>{messagePassword}</p>
+                                    </div>
+                                    <div className='remember-forgot-container'>
+                                        <div className='remember-me-container'>
+                                            <input type='checkbox' className='remember-me' id='remember-me-mobile' checked={isRemember} onChange={handleRemember} />
+                                            <label htmlFor='remember-me-mobile'>Remember me</label>
+                                        </div>
+                                        <a href='/forgot-password'>Forgot password?</a>
+                                    </div>
+                                    <p className='error'>{signInMessage}</p>
+                                    <button type='submit' className='button-blue'>Sing In</button>
+                                </form>
+
+                                <form className='signUp-container-mobile tab-mobile' onSubmit={validateSignUp}>
+                                    <div className='credencials'>
+                                        <input type='text' className='username' value={username} placeholder='Username' onChange={e => setUsername(e.target.value)}/>
+                                        <p className='error'>{messageEmail}</p>
+                                        <input type='text' className='login' value={email} placeholder='Email' onChange={e => setEmail(e.target.value)}/>
+                                        <p className='error'>{messagePassword}</p>
+                                        <input type='password' className='password' value={password} placeholder='Password' onChange={e => setPassword(e.target.value)}/>
+                                        <p className='error'>{messagePassword}</p>
+                                    </div>
+                                    <div className='remember-forgot-container'>
+                                        <div className='remember-me-container'>
+                                            <input type='checkbox' className='remember-me' id='terms-of-use-mobile' checked={isChecked} onChange={handleCheckbox}/>
+                                            <label htmlFor='terms-of-use-mobile'>have read and accept the <a href='/terms-of-use'>Terms of Use</a></label>
+                                        </div>
+                                    </div>
+                                    <p className='error'>{isCheckedMessage}</p>
+                                    <p className='success' style={signUpMessageStyle}>{signUpMessage}</p>
+                                    <button type='submit' className='button-blue'>Sign Up</button>
+                                </form>
                             </div>
-
-                            <form className='signIn-container-mobile tab-mobile' onSubmit={validateSignIn}>
-                                <div className='credencials'>
-                                    <input type='text' className='email' placeholder='Email' onChange={e => setEmail(e.target.value)}/>
-                                    <p className='error'>{messageEmail}</p>
-                                    <input type='password' className='password' placeholder='Password' onChange={e => setPassword(e.target.value)}/>
-                                    <p className='error'>{messagePassword}</p>
-                                </div>
-                                <div className='remember-forgot-container'>
-                                    <div className='remember-me-container'>
-                                        <input type='checkbox' className='remember-me' id='remember-me-mobile' />
-                                        <label htmlFor='remember-me-mobile'>Remember me</label>
-                                    </div>
-                                    <a href='/forgot-password'>Forgot password?</a>
-                                </div>
-
-                                <button type='submit' className='button-blue'>Sing In</button>
-                            </form>
-
-                            <form className='signUp-container-mobile tab-mobile' onSubmit={validateSignUp}>
-                                <div className='credencials'>
-                                    <input type='text' className='email' placeholder='Username' onChange={e => setUsername(e.target.value)}/>
-                                    <p className='error'>{messageEmail}</p>
-                                    <input type='text' className='login' placeholder='Email' onChange={e => setEmail(e.target.value)}/>
-                                    <p className='error'>{messagePassword}</p>
-                                    <input type='password' className='password' placeholder='Password' onChange={e => setPassword(e.target.value)}/>
-                                    <p className='error'>{messagePassword}</p>
-                                </div>
-                                <div className='remember-forgot-container'>
-                                    <div className='remember-me-container'>
-                                        <input type='checkbox' className='remember-me' id='terms-of-use' checked={isChecked} onChange={handleCheckbox}/>
-                                        <label htmlFor='terms-of-use-mobile'>have read and accept the <a href='/terms-of-use'>Terms of Use</a></label>
-                                    </div>
-                                </div>
-                                <p className='error'>{isCheckedMessage}</p>
-                                <button type='submit' className='button-blue'>Sign Up</button>
-                            </form>
-                        </div>
+                        }
                     </div>
                 </aside>
             </div>

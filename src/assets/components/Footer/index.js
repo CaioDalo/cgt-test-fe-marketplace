@@ -1,6 +1,27 @@
+import { useState } from 'react'
+
+import {validateEmail} from '../../../Utils/validations'
+
 import './index.scss'
 
 export default function Footer() {
+
+    const [email, setEmail] = useState('')
+    const [messageEmail, setMessageEmail] = useState('')
+
+    const validateEmailNewsletter = async (e) => {
+        e.preventDefault()
+
+        const isEmail = await validateEmail(email)
+        const isEmailValid = isEmail.status
+        setMessageEmail(isEmail.message)
+
+        if(isEmailValid === true) {
+            window.alert('Email registered successfully!')
+            setEmail('')
+        }
+    }
+    
     return(
         <footer>
             <div className='footer-container'>
@@ -54,9 +75,9 @@ export default function Footer() {
                             <ul className='flex-column'>
                                 <li>
                                     <form>
-                                        <input type='email' placeholder='Email' />
-                                        <br/>
-                                        <button type='submit' className='button-yellow'>Submit</button>
+                                        <input type='email' placeholder='Email' value={email} onChange={e => setEmail(e.target.value)}/>
+                                        <p className='error'>{messageEmail}</p>
+                                        <button type='submit' className='button-yellow' onClick={validateEmailNewsletter}>Submit</button>
                                     </form>
                                 </li>
                             </ul>

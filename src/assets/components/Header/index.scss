@@ -186,6 +186,10 @@
             padding: 20px;
             position: relative;
 
+            @media screen and (max-width:720px) {
+                padding: 20px 20px 20px 35px;
+            }
+
             input[type=radio] {
                 display: none;
             }
@@ -251,7 +255,7 @@
                 }
             }
 
-            #remember-me, #terms-of-use {
+            #remember-me, #terms-of-use, #remember-me-mobile, #terms-of-use-mobile {
                 accent-color: var(--blue);
             }
 
@@ -261,6 +265,15 @@
 
             .signUp-container, .signUp-container-mobile {
                 display: none;
+            }
+        }
+
+        .logged-container {
+            text-align: center;
+            button {
+                margin-top: 15px;
+                padding: 10px;
+                font-size: 14px;
             }
         }
     }
