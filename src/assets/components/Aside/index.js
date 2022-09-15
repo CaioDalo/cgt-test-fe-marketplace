@@ -133,11 +133,9 @@ export default function Aside() {
         document.querySelector(`.${event.target.value}`).style.display = 'block'
     }
 
-    const handleSingInSignUpForms = () => {
-        const formsSignIn = document.querySelectorAll('.form-signIn-singUp')
-        formsSignIn.forEach(form => {
-            form.classList.toggle('d-block')
-        })
+    const showFormsMobile = () => {
+        const formsSignIn = document.querySelector('.form-signIn-singUp')
+        formsSignIn.classList.toggle('d-block')
     }
 
     return (
@@ -158,7 +156,7 @@ export default function Aside() {
                     <a href="/about-us">About us</a>
                 </li>
                 <li >
-                    <button className='user-icon' onClick={handleSingInSignUpForms}><FaUser/></button>
+                    <button className='user-icon' onClick={showFormsMobile}><FaUser/></button>
                 </li>
             </ul>
             <div className='form-signIn-singUp' data-testid='form-signIn-singUp'>
