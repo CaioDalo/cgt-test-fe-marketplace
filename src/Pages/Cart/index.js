@@ -98,7 +98,8 @@ export default function Cart() {
                                                         style: 'currency',
                                                         currency: 'USD'
                                                     }).format(subTotalCart)}</p>
-                                    <button className='button-blue'>Proceed to checkout</button>
+                                    <br />
+                                    <a href='/checkout' className='button-blue'>Proceed to checkout</a>
                                 </div>
                             </div>
                         </div>

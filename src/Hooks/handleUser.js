@@ -54,8 +54,8 @@ export const UserProvider = ({children}) => {
 
                 console.log(user.remember)
                 const token = new Date()
-                user.remember == true ? localStorage.setItem('@user', JSON.stringify({token: token, username: username})) :
-                                        sessionStorage.setItem('@user', JSON.stringify({token: token, username: username}))
+                user.remember == true ? localStorage.setItem('@user', JSON.stringify({token: token, username: username}))
+                : sessionStorage.setItem('@user', JSON.stringify({token: token, username: username}))
             }
         })
 
